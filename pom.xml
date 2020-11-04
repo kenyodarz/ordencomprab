@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.cdmservicios</groupId>
 	<artifactId>ordencomprabackend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<packaging>war</packaging>
 	<name>OrdenCompraBackend</name>
 	<description>API Orden de Compra</description>
@@ -113,6 +113,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
