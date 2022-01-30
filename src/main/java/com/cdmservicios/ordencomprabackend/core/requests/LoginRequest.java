@@ -1,27 +1,18 @@
 package com.cdmservicios.ordencomprabackend.core.requests;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class LoginRequest {
     @NotBlank
-    private String usuario;
+    private String username;
 
     @NotBlank
     private String password;
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
