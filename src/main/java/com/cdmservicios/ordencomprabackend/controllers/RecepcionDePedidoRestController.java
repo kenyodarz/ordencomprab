@@ -1,7 +1,9 @@
 package com.cdmservicios.ordencomprabackend.controllers;
 
 import com.cdmservicios.ordencomprabackend.models.RecepcionDePedidos;
+import com.cdmservicios.ordencomprabackend.security.services.UserDetailsServiceImpl;
 import com.cdmservicios.ordencomprabackend.services.apis.RecepcionDePedidosServiceAPI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,12 @@ import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/recepciones")
+@RequiredArgsConstructor
 public class RecepcionDePedidoRestController {
 
     public final RecepcionDePedidosServiceAPI serviceAPI;
+    private final UserDetailsServiceImpl userdetails;
 
-    @Autowired
-    public RecepcionDePedidoRestController(RecepcionDePedidosServiceAPI serviceAPI) {
-        this.serviceAPI = serviceAPI;
-    }
 
     @GetMapping("/all")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -43,6 +43,7 @@ public class RecepcionDePedidoRestController {
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> save(@Valid @RequestBody RecepcionDePedidos entity, BindingResult result) {
         if (result.hasErrors()) return this.validar(result);
+        entity.setUsuario(userdetails.findByEmail(entity.getUsuario().getEmail()));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.serviceAPI.save(entity));
     }
 

@@ -1,12 +1,30 @@
 package com.cdmservicios.ordencomprabackend.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "proveedor")
 public class Proveedor {
@@ -46,21 +64,21 @@ public class Proveedor {
             inverseJoinColumns = @JoinColumn(name = "idproducto"))
     private List<Producto> productos;
 
-    public void addProducto(Producto producto){
+    public void addProducto(Producto producto) {
         this.productos.add(producto);
     }
 
-    public void removeProducto(Producto producto){
+    public void removeProducto(Producto producto) {
         this.productos.remove(producto);
     }
 
     @PrePersist
-    public void prePersis(){
+    public void prePersis() {
         this.fechaderegistro = new Date();
     }
 
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         this.fechaactualizado = new Date();
     }
 }

@@ -2,17 +2,29 @@ package com.cdmservicios.ordencomprabackend.controllers;
 
 import com.cdmservicios.ordencomprabackend.models.OrdenDeCompra;
 import com.cdmservicios.ordencomprabackend.models.Pedido;
+import com.cdmservicios.ordencomprabackend.security.services.UserDetailsServiceImpl;
 import com.cdmservicios.ordencomprabackend.services.apis.OrdenDeCompraAAPI;
-import net.sf.jasperreports.engine.*;
+import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -26,13 +38,13 @@ import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/ordenes")
+@RequiredArgsConstructor
 public class OrdenDeCompraRestController {
 
     private final OrdenDeCompraAAPI serviceAPI;
 
-    public OrdenDeCompraRestController(OrdenDeCompraAAPI serviceAPI) {
-        this.serviceAPI = serviceAPI;
-    }
+    private final UserDetailsServiceImpl userdetails;
+
 
     @GetMapping("/all")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -53,6 +65,7 @@ public class OrdenDeCompraRestController {
     public ResponseEntity<?> save(@Valid @RequestBody OrdenDeCompra entity, BindingResult result) {
         if (result.hasErrors()) return validar(result);
         // Paso extra.
+        entity.setUsuario(userdetails.findByEmail(entity.getUsuario().getEmail()));
         OrdenDeCompra ordenDeCompra = serviceAPI.get(serviceAPI.save(entity).getIdordendecompra());
         return ResponseEntity.status(HttpStatus.OK).body(ordenDeCompra);
     }

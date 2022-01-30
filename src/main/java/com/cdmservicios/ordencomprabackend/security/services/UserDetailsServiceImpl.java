@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -23,5 +25,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Usuario user = repository.findByUsuario(usuario)
                 .orElseThrow(() -> new UsernameNotFoundException("No se ha encontrado al Usuario: " + usuario));
         return UserDetailsImpl.build(user);
+    }
+
+    public Usuario findByEmail(String usuario){
+        return repository.findByEmail(usuario).orElseThrow(null);
     }
 }

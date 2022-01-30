@@ -1,26 +1,33 @@
 package com.cdmservicios.ordencomprabackend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import org.hibernate.annotations.Type;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "cotizaciones")
 public class Cotizaciones {
 
+    @Column
+    public String formato;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idcotizacion;
-
-    @Column
-    public String formato;
-
     @Column
     private String nombrearchivo;
 
@@ -35,8 +42,8 @@ public class Cotizaciones {
     @JsonIgnore
     private byte[] archivo;
 
-    public Integer getArchivoHashCode(){
-        return (this.archivo != null)? Arrays.hashCode(this.archivo) : null;
+    public Integer getArchivoHashCode() {
+        return (this.archivo != null) ? Arrays.hashCode(this.archivo) : null;
     }
 
     public byte[] getArchivo() {

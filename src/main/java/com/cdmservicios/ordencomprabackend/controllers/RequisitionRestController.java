@@ -1,13 +1,20 @@
 package com.cdmservicios.ordencomprabackend.controllers;
 
 import com.cdmservicios.ordencomprabackend.models.Requisition;
+import com.cdmservicios.ordencomprabackend.security.services.UserDetailsServiceImpl;
 import com.cdmservicios.ordencomprabackend.services.apis.RequisitionServiceAPI;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -17,14 +24,13 @@ import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/requisitions")
+@RequiredArgsConstructor
+@Slf4j
 public class RequisitionRestController {
 
     private final RequisitionServiceAPI serviceAPI;
+    private final UserDetailsServiceImpl userdetails;
 
-    @Autowired
-    public RequisitionRestController(RequisitionServiceAPI serviceAPI) {
-        this.serviceAPI = serviceAPI;
-    }
 
     @GetMapping("/all")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -44,6 +50,7 @@ public class RequisitionRestController {
     public ResponseEntity<?> save(@Valid @RequestBody Requisition entity, BindingResult result) {
         if (result.hasErrors()) return validar(result);
         // Paso extra.
+        entity.setUsuario(userdetails.findByEmail(entity.getUsuario().getEmail()));
         Requisition requisition = serviceAPI.get(serviceAPI.save(entity).getIdrequisicion());
         return ResponseEntity.status(HttpStatus.OK).body(requisition);
     }

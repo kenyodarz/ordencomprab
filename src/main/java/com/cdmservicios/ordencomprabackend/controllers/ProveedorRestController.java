@@ -2,8 +2,10 @@ package com.cdmservicios.ordencomprabackend.controllers;
 
 import com.cdmservicios.ordencomprabackend.models.Producto;
 import com.cdmservicios.ordencomprabackend.models.Proveedor;
+import com.cdmservicios.ordencomprabackend.security.services.UserDetailsServiceImpl;
 import com.cdmservicios.ordencomprabackend.services.apis.ProductoServiceAPI;
 import com.cdmservicios.ordencomprabackend.services.apis.ProveedorServiceAPI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +21,13 @@ import java.util.Map;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/proveedores")
+@RequiredArgsConstructor
 public class ProveedorRestController {
 
     private final ProveedorServiceAPI serviceAPI;
     private final ProductoServiceAPI productoServiceAPI;
+    private final UserDetailsServiceImpl userdetails;
 
-    @Autowired
-    public ProveedorRestController(ProveedorServiceAPI serviceAPI, ProductoServiceAPI productoServiceAPI) {
-        this.serviceAPI = serviceAPI;
-        this.productoServiceAPI = productoServiceAPI;
-    }
 
     @GetMapping("/all")
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -48,6 +47,7 @@ public class ProveedorRestController {
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> save(@Valid @RequestBody Proveedor entity, BindingResult result) {
         if (result.hasErrors()) return this.validar(result);
+        entity.setUsuario(userdetails.findByEmail(entity.getUsuario().getEmail()));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.serviceAPI.save(entity));
     }
 

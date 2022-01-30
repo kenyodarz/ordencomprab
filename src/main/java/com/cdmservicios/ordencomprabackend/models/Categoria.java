@@ -1,10 +1,24 @@
 package com.cdmservicios.ordencomprabackend.models;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
 @Table(name = "categoria")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,47 +31,4 @@ public class Categoria {
     private Date fechaderegistro;
     @Column
     private Long idusuario;
-
-    public Categoria() {
-    }
-
-    public Long getIdcategoria() {
-        return idcategoria;
-    }
-
-    public void setIdcategoria(Long idcategoria) {
-        this.idcategoria = idcategoria;
-    }
-
-    public String getNombrecategoria() {
-        return nombrecategoria;
-    }
-
-    public void setNombrecategoria(String nombrecategoria) {
-        this.nombrecategoria = nombrecategoria;
-    }
-
-    public String getDescripcioncategoria() {
-        return descripcioncategoria;
-    }
-
-    public void setDescripcioncategoria(String descripcioncategoria) {
-        this.descripcioncategoria = descripcioncategoria;
-    }
-
-    public Date getFecharegistro() {
-        return fechaderegistro;
-    }
-
-    public void setFecharegistro(Date fecharegistro) {
-        this.fechaderegistro = fecharegistro;
-    }
-
-    public Long getIdusuario() {
-        return idusuario;
-    }
-
-    public void setIdusuario(Long idusuario) {
-        this.idusuario = idusuario;
-    }
 }
